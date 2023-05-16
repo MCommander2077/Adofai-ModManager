@@ -1,11 +1,11 @@
-import tkinter
-import customtkinter
-import ttkbootstrap
+import tkinter as tk
+import customtkinter as ctk
+import ttkbootstrap as ttk
 import tkinter.messagebox as tkm
 
 class TkinterAction():
     def __init__(self):
-        pass
+        ctk.set_appearance_mode("Light")
     def showinfo(self,message="message\nmessage2",title="title"):
         tkm.showinfo(message=message,title=title)
     def showerror(self,message="message\nmessage2",title="title"):
@@ -16,3 +16,5 @@ class TkinterAction():
 if __name__ == "__main__":
     TkAct = TkinterAction()
     TkAct.showinfo()
+    TkAct.showerror()
+    TkAct.showwarning()
