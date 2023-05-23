@@ -1,7 +1,8 @@
 # file: current_date_time.py
-#!/usr/bin/python
+# !/usr/bin/python
 
 from PyQt6.QtCore import QDate, QTime, QDateTime, Qt
+
 
 def get_date_time():
     now = QDate.currentDate()

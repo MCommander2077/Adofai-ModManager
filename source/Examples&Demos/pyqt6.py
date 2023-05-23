@@ -1,5 +1,5 @@
 # file: main_window.py
-#!/usr/bin/python
+# !/usr/bin/python
 
 """
 ZetCode PyQt6 tutorial
@@ -24,9 +24,7 @@ class Example(QMainWindow):
 
         self.initUI()
 
-
     def initUI(self):
-
         textEdit = QTextEdit()
         self.setCentralWidget(textEdit)
 
@@ -50,7 +48,6 @@ class Example(QMainWindow):
 
 
 def main():
-
     app = QApplication(sys.argv)
     ex = Example()
     sys.exit(app.exec())

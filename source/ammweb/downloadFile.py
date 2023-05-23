@@ -5,10 +5,7 @@ import datetime
 
 # 传入的命令行参数，要下载文件的url
 if __name__ == '__main__':
-    url =
-else:
-    url = sys.argv[1]
-
+    url = "https://raw.githubusercontent.com/MCommander2077/Adofai-ModManager/main/modlist.tar.gz"
 
 
 def Handler(start, end, url, filename):
@@ -47,7 +44,7 @@ def download_file(url, num_thread=5):
             end = start + part
 
         t = threading.Thread(target=Handler, kwargs={'start': start, 'end': end, 'url': url, 'filename': file_name})
-        t.setDaemon(True)
+        t.daemon = True
         t.start()
 
     # 等待所有线程下载完成
