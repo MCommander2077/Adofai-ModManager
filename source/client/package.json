@@ -1,0 +1,25 @@
+{
+  "name": "adofai-modmanager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "elecrton ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MCommander2077/Adofai-ModManager.git"
+  },
+  "keywords": [
+    "adofai"
+  ],
+  "author": "MCommander2077",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MCommander2077/Adofai-ModManager/issues"
+  },
+  "homepage": "https://github.com/MCommander2077/Adofai-ModManager#readme",
+  "devDependencies": {
+    "electron": "^25.2.0"
+  }
+}
