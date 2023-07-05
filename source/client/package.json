@@ -4,7 +4,9 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "elecrton ."
+    "dist": "electron-builder --win --x64",
+    "package": "electron-packager ./ --overwrite -all",
+    "start": "elecrton ."
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,69 @@
   },
   "homepage": "https://github.com/MCommander2077/Adofai-ModManager#readme",
   "devDependencies": {
-    "electron": "^25.2.0"
+    "electron": "^25.2.0",
+    "electron-builder": "^24.4.0",
+    "electron-packager": "^17.1.1"
+  },
+  "build": {
+    "productName": "adofai_mod_manager",
+    "appId": "com.mander2077.amodmanager",
+    "copyright": "MCommander2077",
+    "directories": {
+      "output": "build"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./build/icons/install.ico",
+      "uninstallerIcon": "./build/icons/uninstall.ico",
+      "installerHeaderIcon": "./build/icons/install_head.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "icon",
+      "include": "build/script/installer.nsh"
+    },
+    "publish": [
+      {
+        "provider": "Rainyun&Github",
+        "url": "https://amodm.eu.org/"
+      }
+    ],
+    "files": [
+      "dist/electron/**/*"
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
+    },
+    "mac": {
+      "icon": "assets/icons/icon.icns"
+    },
+    "win": {
+      "icon": "assets/icons/aims.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "assets/icons"
+    }
   }
 }

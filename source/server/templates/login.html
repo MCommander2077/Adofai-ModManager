@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Login</title>
+    <link href="../static/css/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro.min.css">
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-colors.min.css">
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-rtl.min.css">
+    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-icons.min.css">
+</head>
+
+<body>
+    {% if error %}
+    <script type="text/javascript">
+        alert("{{ error }}")
+    </script>
+    {% endif %}
+    <div class="container">
+        <div id="loading_box">
+            <div class="text">
+                <p>加载中...</p>
+            </div>
+            <div class="box">
+                <div class="loading">
+                </div>
+            </div>
+        </div>
+        <form id="f_form" method="POST">
+            <input name="password" placeholder="Password" type="password">
+            <button class="button"><input id="btn" type="submit" value="Login"></button>
+        </form>
+    </div>
+    <script type="text/javascript">
+        var t1 = document.getElementById('loading_box');
+        var t2 = document.getElementById('f_form')
+        t1.style.visibility = 'hidden';	// 隐藏元素
+        t2.style.visibility = 'visible';	// 显示元素
+
+        var btn = document.getElementById("btn");
+        btn.onclick = function () {
+            t1.style.visibility = 'visible';	// 显示元素
+            t2.style.visibility = 'hidden';	// 隐藏元素
+        }
+    </script>
+    <script src="https://cdn.korzh.com/metroui/v4/js/metro.min.js"></script>
+</body>
+
+</html>
