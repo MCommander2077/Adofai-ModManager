@@ -6,7 +6,7 @@ function createWindow () {
     height: 600
   })
 
-  win.loadURL('https://app.amodm.eu.org/')
+  win.loadURL('https://amodm.eu.org/')
 }
 
 app.whenReady().then(() => {

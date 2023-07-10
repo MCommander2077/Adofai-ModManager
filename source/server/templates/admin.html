@@ -5,46 +5,75 @@
     <meta charset="utf-8">
     <title>管理员/Admin</title>
     <link href="static/css/index.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css">
-    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro.min.css">
-    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-colors.min.css">
-    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-rtl.min.css">
-    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-icons.min.css">
+    <link href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css" rel="stylesheet">
+    <link href="https://cdn.korzh.com/metroui/v4/css/metro.min.css" rel="stylesheet">
+    <link href="https://cdn.korzh.com/metroui/v4/css/metro-colors.min.css" rel="stylesheet">
+    <link href="https://cdn.korzh.com/metroui/v4/css/metro-icons.min.css" rel="stylesheet">
 </head>
 
 <body>
-
-    <div class="container">
-        <header>
-            <h1>管理员页面/Admin Page:</h1>
-        </header>
-        <main>
-            <form method="POST">
-                <div class="form-group">
-                    {{ form.csrf_token }}
-                </div>
-                <div class="form-group">
-                    {{ form.name.label }} {{ form.name }}<br>
-                </div>
-                <div class="form-group">
-                    {{ form.difficult.label }} {{ form.difficult }}<br>
-                </div>
-                <div class="form-group">
-                    {{ form.video.label }} {{ form.video }}<br>
-                </div>
-                <div class="form-group">
-                    {{ form.downloadURL.label }} {{ form.downloadURL }}<br>
-                </div>
-                <div class="form-group">
-                    {{ form.geneticist.label }} {{ form.geneticist }}<br>
-                </div>
-                <div class="form-group">
-                    {{ form.submit }}
-                </div>
-            </form>
-        </main>
+<aside class="sidebar pos-absolute z-2"
+       data-role="sidebar"
+       data-shift=".shifted-content-2"
+       data-static="md"
+       data-static-shift=".shifted-content-2"
+       data-toggle="#sidebar-toggle-4"
+       id="sb4">
+    <div class="sidebar-header" data-image="https://metroui.org.ua/images/sb-bg-1.jpg">
+        <!--
+        <div class="avatar">
+            <img data-role="gravatar" data-email="sergey@pimenov.com.ua">
+        </div>
+        -->
+        <span class="title fg-white">Adofai Mod Manager</span>
+        <span class="subtitle fg-white"> 2023 © MCommander</span>
     </div>
-    <script src="https://cdn.korzh.com/metroui/v4/js/metro.min.js"></script>
+    <ul class="sidebar-menu">
+        <li><a href="{{ url_for('index') }}"><span class="mif-home icon"></span>主页/Home</a></li>
+        <li><a href="{{ url_for('list') }}"><span class="mif-books icon"></span>模组列表/List</a></li>
+        <li class="divider"></li>
+        <li><a href="{{ url_for('admin') }}"><span class="mif-images icon"></span>管理/Admin</a></li>
+    </ul>
+</aside>
+<div class="shifted-content-2 h-100 p-ab">
+    <div class="appbar pos-absolute bg-red z-1" data-role="appbar">
+        <button class="app-bar-item c-pointer" id="sidebar-toggle-4">
+            <span class="mif-menu fg-white"></span>
+        </button>
+    </div>
+
+    <div class="h-100 p-4">
+        <h1>管理员页面/Admin Page:</h1>
+        <form method="POST">
+            <div class="form-group">
+                {{ form.csrf_token }}
+            </div>
+            <div class="form-group">
+                {{ form.name.label }} {{ form.name }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.author.label }} {{ form.author }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.download_num.label }} {{ form.download_num }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.description.label }} {{ form.description }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.download_url.label }} {{ form.download_url }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.l_version.label }} {{ form.l_version }}<br>
+            </div>
+            <div class="form-group">
+                {{ form.submit }}
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.korzh.com/metroui/v4/js/metro.min.js"></script>
 </body>
 
 </html>

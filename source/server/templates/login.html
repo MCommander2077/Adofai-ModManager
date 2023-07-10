@@ -2,17 +2,47 @@
 <html lang="en">
 
 <head>
-    <title>Login</title>
+    <title>登录/Login</title>
     <link href="../static/css/index.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css">
     <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro.min.css">
     <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-colors.min.css">
-    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-rtl.min.css">
     <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-icons.min.css">
 </head>
 
 <body>
-    {% if error %}
+<aside class="sidebar pos-absolute z-2"
+       data-role="sidebar"
+       data-toggle="#sidebar-toggle-4"
+       id="sb4"
+       data-shift=".shifted-content-2"
+       data-static-shift=".shifted-content-2"
+       data-static="md">
+    <div class="sidebar-header" data-image="https://metroui.org.ua/images/sb-bg-1.jpg">
+        <!--
+        <div class="avatar">
+            <img data-role="gravatar" data-email="sergey@pimenov.com.ua">
+        </div>
+        -->
+        <span class="title fg-white">Adofai Mod Manager</span>
+        <span class="subtitle fg-white"> 2023 © MCommander</span>
+    </div>
+    <ul class="sidebar-menu">
+        <li><a href="{{ url_for('index') }}"><span class="mif-home icon"></span>主页/Home</a></li>
+        <li><a href="{{ url_for('list') }}"><span class="mif-books icon"></span>模组列表/List</a></li>
+        <li class="divider"></li>
+        <li><a href="{{ url_for('admin') }}"><span class="mif-images icon"></span>管理/Admin</a></li>
+    </ul>
+</aside>
+<div class="shifted-content-2 h-100 p-ab">
+    <div class="appbar pos-absolute bg-red z-1" data-role="appbar">
+        <button class="app-bar-item c-pointer" id="sidebar-toggle-4">
+            <span class="mif-menu fg-white"></span>
+        </button>
+    </div>
+
+    <div class="h-100 p-4">
+        {% if error %}
     <script type="text/javascript">
         alert("{{ error }}")
     </script>
@@ -44,6 +74,9 @@
             t2.style.visibility = 'hidden';	// 隐藏元素
         }
     </script>
+</div>
+</div>
+
     <script src="https://cdn.korzh.com/metroui/v4/js/metro.min.js"></script>
 </body>
 

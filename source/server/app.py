@@ -3,7 +3,7 @@ import ast
 import platform
 
 from flask import (Flask, Response, make_response, redirect, render_template,
-                    request, url_for, session, jsonify)
+                   request, url_for, session, jsonify)
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 
@@ -32,25 +32,30 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-class DatasTable(db.Model):
+class AdofaiModsData(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    data = db.Column(db.String(512))
+    data_name = db.Column(db.String(512))
+    data_author = db.Column(db.String(512))
+    data_download_num = db.Column(db.String(512))
+    data_download_url = db.Column(db.String(512))
+    data_description = db.Column(db.String(512))
+    data_latest_version = db.Column(db.String(512))
 
     def __repr__(self):
-        return f'{self.data}|*|{self.id}'
+        return f'{self.data_name}|*|{self.data_author}|*|{self.data_download_num}|*|{self.data_description}|*|{self.data_latest_version}|*|{self.data_download_url}|*|{self.id}'
 
 
 def db_get_data(id):
     try:
-        data = DatasTable().query.filter_by(id=id).all()[0]
+        data = AdofaiModsData().query.filter_by(id=id).all()[0]
     except Exception as error:
         return False
     return str(data)
 
 
 def db_get_all_data():
-    users = DatasTable().query.all()
-    data=[]
+    users = AdofaiModsData().query.all()
+    data = []
     for i in range(len(users)):
         data.append(str(users[i]))
     return data
@@ -61,11 +66,12 @@ with app.app_context():
 
 
 class MyForm(FlaskForm):
-    name = StringField('曲师+歌曲/Artist+Song:')
-    geneticist = StringField('谱师/Geneticist:')
-    difficult = StringField('难度/Difficult:')
-    video = StringField('视频/Vidio:')
-    downloadURL = StringField('下载链接/DownloadURL:')
+    name = StringField('模组名称/Name:')
+    author = StringField('作者/Author:')
+    download_num = StringField('下载/DownloadNumber:')
+    description = StringField('简介/Description:')
+    download_url = StringField('下载链接/DownloadURL:')
+    l_version = StringField('最新版本/LatestVersion:')
     submit = SubmitField('提交/Submit')
 
 
@@ -76,20 +82,6 @@ def index():
 
 @app.route('/list')
 def list():
-    # 默认显示第一页
-    page = 1
-    # 检查请求参数中的 page 值
-    if 'page' in request.args:
-        page = int(request.args['page'])
-        if page <= 1:
-            page = 1
-            pagelist = [1, 1, 2]
-        else:
-            pagelist = [(page - 1), page, (page + 1)]
-    else:
-        page = 1
-        pagelist = [1, 1, 2]
-
     try:
         idata = db_get_all_data()
         if not idata:
@@ -101,7 +93,7 @@ def list():
 
     except Exception as error:
         return render_template('404.html', error=error), 404  # 返回模板和状态码
-    return render_template('list.html', data=final_data[((page - 1) * 10):(page * 10)], pagelist=pagelist)
+    return render_template('list.html', data=final_data)
 
 
 @app.route('/admin-login')
@@ -123,13 +115,13 @@ def login_post():
         return render_template('login.html', error='密码错误')
 
 
-@app.route('/song/<int:song_id>')
-def get_song(song_id):
-    result = db_get_data(song_id)
+@app.route('/mod/<int:mod_id>')
+def get_song(mod_id):
+    result = db_get_data(mod_id)
     if not result:
         pass
     elif str(result):
-        return render_template('songinfo.html', item=result.strip().split('|*|'))
+        return render_template('info.html', item=result.strip().split('|*|'))
     else:
         pass
     return render_template('404.html', error='Song Not Found'), 404  # 返回模板和状态码
@@ -164,10 +156,15 @@ myFunction()
 '''  # 否则重定向至登录页面
 
     if form.validate_on_submit():
-        if form.name.data and form.difficult.data and form.video.data and form.downloadURL.data and form.geneticist.data:
+        if form.name.data and form.download_num.data and form.description.data and form.download_url.data and form.author.data:
             # 创建新的数据行
-            new_data = DatasTable(
-                data=f"{form.name.data}|*|{form.difficult.data}|*|{form.video.data}|*|{form.downloadURL.data}|*|{form.geneticist.data}"
+            new_data = AdofaiModsData(
+                data_name=form.name.data,
+                data_author=form.author.data,
+                data_download_num=form.download_num.data,
+                data_download_url=form.download_url.data,
+                data_description=form.description.data,
+                data_latest_version=form.l_version.data,
             )
             # 添加到数据库
             db.session.add(new_data)
@@ -191,5 +188,5 @@ def page_not_found(e):  # 接受异常对象作为参数
 
 
 if __name__ == '__main__':
-    #app.run(debug=True, host='127.0.0.1', port=9807)
-    app.run(host='127.0.0.1', port=9800)
+    # app.run(debug=True, host='127.0.0.1', port=9807)
+    app.run(host='127.0.0.1', port=9801)

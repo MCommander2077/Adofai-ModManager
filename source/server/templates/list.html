@@ -2,52 +2,82 @@
 <html lang="en">
 
 <head>
-    <title>铺面列表/Levels</title>
+    <title>模组列表/Mods</title>
     <link href="../static/css/index.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-all.min.css">
     <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro.min.css">
     <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-colors.min.css">
-    <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-rtl.min.css">
     <link rel="stylesheet" href="https://cdn.korzh.com/metroui/v4/css/metro-icons.min.css">
 </head>
 
 <body>
+<aside class="sidebar pos-absolute z-2"
+       data-role="sidebar"
+       data-toggle="#sidebar-toggle-4"
+       id="sb4"
+       data-shift=".shifted-content-2"
+       data-static-shift=".shifted-content-2"
+       data-static="md">
+    <div class="sidebar-header" data-image="https://metroui.org.ua/images/sb-bg-1.jpg">
+        <!--
+        <div class="avatar">
+            <img data-role="gravatar" data-email="sergey@pimenov.com.ua">
+        </div>
+        -->
+        <span class="title fg-white">Adofai Mod Manager</span>
+        <span class="subtitle fg-white"> 2023 © MCommander</span>
+    </div>
+    <ul class="sidebar-menu">
+        <li><a href="{{ url_for('index') }}"><span class="mif-home icon"></span>主页/Home</a></li>
+        <li><a href="{{ url_for('list') }}"><span class="mif-books icon"></span>模组列表/List</a></li>
+        <li class="divider"></li>
+        <li><a href="{{ url_for('admin') }}"><span class="mif-images icon"></span>管理/Admin</a></li>
+    </ul>
+</aside>
+<div class="shifted-content-2 h-100 p-ab">
+    <div class="appbar pos-absolute bg-red z-1" data-role="appbar">
+        <button class="app-bar-item c-pointer" id="sidebar-toggle-4">
+            <span class="mif-menu fg-white"></span>
+        </button>
+    </div>
 
-    <div class="container">
+    <div class="h-100 p-4">
         <h2>铺面列表 Levels</h2>
-        <table class="table">
+        <table class="table table-border cell-border"
+        data-role="table"
+        data-table-rows-count-title="显示项目数/Show entries:"
+        data-table-search-title="搜索/Search:"
+        data-show-table-info="false"
+        data-pagination-prev-title="上一页/Prev"
+        data-pagination-next-title="下一页/Next"
+        data-rows-steps="10, 20, 30, 50"
+        >
             <thead>
                 <tr>
-                    <th>曲师+歌曲/Artist+Song:</th>
-                    <th>难度/Difficult:</th>
-                    <th>谱师/geneticist:</th>
-                    <th>详情页</th>
+                    <th>模组名称/Name</th>
+                    <th>作者/Author</th>
+                    <th>下载数量/DownloadNumber</th>
+                    <th>详情页/More INFO</th>
                 </tr>
             </thead>
             <tbody>
-
                 {% for item in data %}
                 <tr>
-
-
                     <td>{{ item[0] }}</td>
                     <td>{{ item[1] }}</td>
-                    <td>{{ item[4] }}</td>
-                    <td><a href="../song/{{ item[5] }}">
-                            <p>详情</p>
-                        </a></td>
+                    <td>{{ item[2] }}</td>
+                    <td>
+                        <a href="../mod/{{ item[6] }}">
+                            <button class="button primary outline small rounded shadowed d-flex p-2">详情</button>
+                        </a>
+                    </td>
                 </tr>
-
                 {% endfor %}
             </tbody>
-
         </table>
-        <h2>当前页面：第{{pagelist[1]}}页 <a href="../levels?page={{pagelist[0]}}">
-                <button>上一页</button>
-            </a> <a href="../levels?page={{pagelist[2]}}">
-                <button>下一页</button>
-            </a></h2>
-    </div>
+</div>
+</div>
+
     <script src="https://cdn.korzh.com/metroui/v4/js/metro.min.js"></script>
 </body>
 
