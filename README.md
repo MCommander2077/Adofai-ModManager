@@ -10,7 +10,7 @@
 
 [Download the latest version of this App](https://github.com/MCommander2077/Adofai-ModManager/releases/tag/latest)  
 Server is in Source Code.zip(/source/server/)  
-Windows User please odwnload **Adofai-ModManager.1.0.0.exe**  
+Windows User please download **Adofai-ModManager.1.0.0.exe**  
 Darwin(MacOS) User please download **Adofai-ModManager.1.0.0.app.zip**  
 Linux User please use the [offical website](https://amodm.eu.org)  
 
