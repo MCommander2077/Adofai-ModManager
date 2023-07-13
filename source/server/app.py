@@ -1,29 +1,43 @@
 import os
-import ast
-import platform
-
-from flask import (Flask, Response, make_response, redirect, render_template,
-                   request, url_for, session, jsonify)
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-
-import config
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import desc
-
 import threading
+import random
+import datetime
+import time
+
+from flask import Flask
+from flask import (make_response, redirect, render_template,
+                   request, url_for, session)
+from flask_sqlalchemy import SQLAlchemy
+
+from config import AdminForm
+import config
 
 # f'''{self.artist_song}|*|{self.geneticist}|*|{self.difficult}|*|{self.video}|*|{self.download_url}|*|{self.song_id}'''
 
 # 定义全局变量
 data = ''
+log_key_update = []
 password = config.SECRET_KEY
 
 app = Flask(__name__, static_folder='static')
 app.secret_key = os.getenv('SECRET_KEY', 'secret_key')
 
-app.config['SECRET_KEY'] = (os.urandom(24))
+
+def update_secret_key():
+    global log_key_update
+    while 1:
+        app.config['SECRET_KEY'] = (os.urandom(24))
+        # 配置WTF的CSRF，Value可以是任意的字符串
+        app.config['WTF_CSRF_SECRET_KEY'] = (os.urandom(24))
+        log_key_update.append(f"{datetime.date.today()} {time.strftime('%H:%M:%S')}")
+        if len(log_key_update) > 10:
+            log_key_update = log_key_update[:10]
+        time.sleep(3600)
+
+
+update_key = threading.Thread(target=update_secret_key)
+update_key.setDaemon = True
+update_key.start()
 
 # 配置数据库连接
 app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_CONFIG
@@ -45,9 +59,9 @@ class AdofaiModsData(db.Model):
         return f'{self.data_name}|*|{self.data_author}|*|{self.data_download_num}|*|{self.data_description}|*|{self.data_latest_version}|*|{self.data_download_url}|*|{self.id}'
 
 
-def db_get_data(id):
+def db_get_data(req_id):
     try:
-        data = AdofaiModsData().query.filter_by(id=id).all()[0]
+        data = AdofaiModsData().query.filter_by(id=req_id).all()[0]
     except Exception as error:
         return False
     return str(data)
@@ -64,15 +78,6 @@ def db_get_all_data():
 with app.app_context():
     db.create_all()
 
-
-class MyForm(FlaskForm):
-    name = StringField('模组名称/Name:')
-    author = StringField('作者/Author:')
-    download_num = StringField('下载/DownloadNumber:')
-    description = StringField('简介/Description:')
-    download_url = StringField('下载链接/DownloadURL:')
-    l_version = StringField('最新版本/LatestVersion:')
-    submit = SubmitField('提交/Submit')
 
 
 @app.route('/')
@@ -96,23 +101,21 @@ def list():
     return render_template('list.html', data=final_data)
 
 
-@app.route('/admin-login')
-def login_static():
-    return render_template('login.html')
 
-
-@app.route('/admin-login', methods=['POST'])
-def login_post():
+@app.route('/admin-login', methods=['POST','GET'])
+def login():
     global password  # 声明全局变量'
-    form = MyForm()
-    pwd = request.form['password']  # 获取用户提交的密码
+    if request.method == 'GET':
+        return render_template('login.html')
+    if request.method == 'POST':
+        pwd = request.form['password']  # 获取用户提交的密码
 
-    if pwd == password:  # 判断密码是否正确
-        resp = make_response('<meta http-equiv="Refresh" content="0;url=../admin" />')  # 使用表单渲染模板
-        session['password'] = pwd  # 将密码存储在cookie中
-        return resp
-    else:
-        return render_template('login.html', error='密码错误')
+        if pwd == password:  # 判断密码是否正确
+            resp = make_response('<meta http-equiv="Refresh" content="0;url=../admin" />')  # 使用表单渲染模板
+            session['password'] = pwd  # 将密码存储在cookie中
+            return resp
+        else:
+            return render_template('login.html', error='密码错误')
 
 
 @app.route('/mod/<int:mod_id>')
@@ -127,59 +130,73 @@ def get_song(mod_id):
     return render_template('404.html', error='Song Not Found'), 404  # 返回模板和状态码
 
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/admin', methods=['POST', 'GET'])
 def admin():
-    pwd_cookie = session.get('password')  # 获取密码cookie
-    pwd = pwd_cookie if pwd_cookie else ''  # 如果cookie不存在，初始化密码为空
+    if request.method == 'GET':
+        pwd_cookie = session.get('password')  # 获取密码cookie
+        pwd = pwd_cookie if pwd_cookie else None  # 如果cookie不存在，初始化密码为空
 
-    form = MyForm()
-
-    if pwd == password:  # 如果密码正确，则返回内容
-        pass
-    elif pwd == '':
-        return '''
-<script>
-function myFunction()
-{alert("未登录！");}
-myFunction()
-</script>
-<meta http-equiv="Refresh" content="0;url=../admin-login" />
-'''  # 否则重定向至登录页面
-    else:
-        return '''
-<script>
-function myFunction()
-{alert("密码错误！");}
-myFunction()
-</script>
-<meta http-equiv="Refresh" content="0;url=../admin-login" />
-'''  # 否则重定向至登录页面
-
-    if form.validate_on_submit():
-        if form.name.data and form.download_num.data and form.description.data and form.download_url.data and form.author.data:
+        if pwd == password:  # 如果密码正确，则返回内容
+            pass
+        elif pwd is None:
+            return '''
+        <script>
+        function myFunction()
+        {alert("未登录！");}
+        myFunction()
+        </script>
+        <meta http-equiv="Refresh" content="0;url=../admin-login" />
+        '''  # 否则重定向至登录页面
+        else:
+            return '''
+        <script>
+        function myFunction()
+        {alert("密码错误！");}
+        myFunction()
+        </script>
+        <meta http-equiv="Refresh" content="0;url=../admin-login" />
+        '''  # 否则重定向至登录页面
+        return render_template('admin.html')
+    if request.method == 'POST':
+        request_dict = dict(request.form)
+        if request_dict.get('data_action_select') == 'c':
             # 创建新的数据行
             new_data = AdofaiModsData(
-                data_name=form.name.data,
-                data_author=form.author.data,
-                data_download_num=form.download_num.data,
-                data_download_url=form.download_url.data,
-                data_description=form.description.data,
-                data_latest_version=form.l_version.data,
+                data_name=request_dict['data_name'],
+                data_author=request_dict['data_author'],
+                data_download_num=request_dict['data_download_num'],
+                data_download_url=request_dict['data_download_url'],
+                data_description=request_dict['data_description'],
+                data_latest_version=request_dict['data_latest_version'],
             )
             # 添加到数据库
             db.session.add(new_data)
             db.session.commit()
-            return redirect(url_for('index'))
-        else:
-            return '''
-<script>
-function myFunction()
-{alert("不能提交空值！");}
-myFunction()
-</script>
-<meta http-equiv="Refresh" content="0" />
-'''
-    return render_template('admin.html', form=form)
+        if request_dict.get('data_action_select') == 'f':
+            try:
+                result = AdofaiModsData.query.filter(AdofaiModsData.id == request_dict['data_id']).first()
+                # 将要修改的值赋给title
+                result.data_name = request_dict['data_name']
+                result.data_author = request_dict['data_author']
+                result.data_download_num = request_dict['data_download_num']
+                result.data_download_url = request_dict['data_download_url']
+                result.data_description = request_dict['data_description']
+                result.data_latest_version = request_dict['data_latest_version']
+                db.session.commit()
+            except AttributeError as error:
+                return render_template('404.html', error='修改的序号不存在！'), 404  # 返回模板和状态码
+        if request_dict.get('data_action_select') == 'd':
+            try:
+                result = AdofaiModsData.query.filter(AdofaiModsData.id == request_dict['data_id']).first()
+                db.session.delete(result)
+                db.session.commit()
+            except Exception as error:
+                return render_template('404.html', error=f'错误，{error}'), 404  # 返回模板和状态码
+
+        return redirect(url_for('list'))
+
+
+    return render_template('admin.html')
 
 
 @app.errorhandler(404)  # 传入要处理的错误代码
@@ -189,4 +206,4 @@ def page_not_found(e):  # 接受异常对象作为参数
 
 if __name__ == '__main__':
     # app.run(debug=True, host='127.0.0.1', port=9807)
-    app.run(host='127.0.0.1', port=9801)
+    app.run(host='127.0.0.1', port=random.randint(999, 65535))

@@ -33,6 +33,7 @@
         <li><a href="{{ url_for('list') }}"><span class="mif-books icon"></span>模组列表/List</a></li>
         <li class="divider"></li>
         <li><a href="{{ url_for('admin') }}"><span class="mif-images icon"></span>管理/Admin</a></li>
+        <li><a href="https://docs.amodm.eu.org"><span class="mif-images icon"></span>文档/docs</a></li>
     </ul>
 </aside>
 <div class="shifted-content-2 h-100 p-ab">
@@ -46,28 +47,37 @@
         <h1>管理员页面/Admin Page:</h1>
         <form method="POST">
             <div class="form-group">
-                {{ form.csrf_token }}
+            <select name="data_action_select" data-role="select">
+                <option name="c">创建</option>
+                <option name="f">修改</option>
+                <option name="d">删除</option>
+            </select>
             </div>
             <div class="form-group">
-                {{ form.name.label }} {{ form.name }}<br>
+            <input name="data_id" type="text" data-role="input" class="metro-input" placeholder="输入模组ID"/>
+                <small class="text-muted">模组ID(当创建时不可用)</small>
+
+            <input name="data_name" type="text" data-role="input" class="metro-input" placeholder="输入名字"/>
+                <small class="text-muted">模组名字</small>
+
+            <input name="data_author" type="text" data-role="input" class="metro-input" placeholder="输入作者"/>
+                <small class="text-muted">模组作者</small>
+
+            <input name="data_download_num" type="text" data-role="input" class="metro-input" placeholder="输入模组下载数量"/>
+                <small class="text-muted">模组下载数量</small>
+
+            <input name="data_download_url" type="text" data-role="input" class="metro-input" placeholder="输入模组下载链接"/>
+                <small class="text-muted">模组下载链接</small>
+
+            <input name="data_description" type="text" data-role="input" class="metro-input" placeholder="输入模组简介"/>
+                <small class="text-muted">模组简介</small>
+
+            <input name="data_latest_version" type="text" data-role="input" class="metro-input" placeholder="输入模组最新版本"/>
+                <small class="text-muted">模组最新版本</small>
             </div>
             <div class="form-group">
-                {{ form.author.label }} {{ form.author }}<br>
-            </div>
-            <div class="form-group">
-                {{ form.download_num.label }} {{ form.download_num }}<br>
-            </div>
-            <div class="form-group">
-                {{ form.description.label }} {{ form.description }}<br>
-            </div>
-            <div class="form-group">
-                {{ form.download_url.label }} {{ form.download_url }}<br>
-            </div>
-            <div class="form-group">
-                {{ form.l_version.label }} {{ form.l_version }}<br>
-            </div>
-            <div class="form-group">
-                {{ form.submit }}
+            <input type="submit" class="button" value="提交">
+                <a href="../"><input type="button" class="button" value="取消"></a>
             </div>
         </form>
     </div>
